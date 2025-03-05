@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO + DeepSORT 실시간 스트리밍</title>
+</head>
+<body>
+    <h1>YOLO + DeepSORT 영상 처리</h1>
+
+    <form id="upload-form">
+        <input type="file" id="videoFile" accept="video/mp4">
+        <button type="submit">업로드 및 처리 시작</button>
+    </form>
+
+    <h2>실시간 스트리밍</h2>
+    <div style="position: relative; display: inline-block;">
+        <img id="video-stream" width="640" height="360" style="cursor: crosshair;" />
+    </div>
+
+    <h2>최종 결과 다운로드</h2>
+    <button id="download-button">최종 비디오 다운로드</button>
+
+    <script>
+        const form = document.getElementById("upload-form");
+        const socket = new WebSocket("ws://localhost:8000/ws");
+        const videoStream = document.getElementById("video-stream");
+        const downloadButton = document.getElementById("download-button");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const fileInput = document.getElementById("videoFile");
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("파일을 선택하세요.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            // ✅ 영상 파일 업로드
+            const response = await fetch("http://localhost:8000/upload/", {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            console.log("✅ 파일 업로드 완료:", data);
+        });
+
+        socket.onmessage = function(event) {
+            const imageData = "data:image/jpeg;base64," + event.data;
+            videoStream.src = imageData;
+        };
+
+        downloadButton.addEventListener("click", async () => {
+            const response = await fetch("http://localhost:8000/download/");
+            const data = await response.json();
+            window.location.href = data.download_url;
+        });
+
+        // ✅ 영상에서 특정 지점 클릭 감지 후 서버로 좌표 전송
+        videoStream.addEventListener("click", (event) => {
+            const rect = videoStream.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            console.log("클릭 좌표:", x, y);
+
+            fetch("http://localhost:8000/assign_parking/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ x, y })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("할당된 주차 위치:", data);
+            })
+            .catch(error => console.error("오류:", error));
+        });
+    </script>
+</body>
+</html>
