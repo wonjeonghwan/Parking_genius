@@ -7,7 +7,7 @@
 
 ## 🧠 프로젝트 개요
 
-- YOLO + DeepSORT를 활용한 실시간 차량 감지 및 추적  
+- YOLO를 활용한 실시간 차량 감지 및 추적  
 - 사전 학습된 머신러닝 모델을 통한 빈자리/점유자리 판단  
 - 사용자가 클릭한 기준 좌표에서 가까운 빈자리 추천 가능  
 - FastAPI 기반 웹 인터페이스를 통해 영상 업로드, 분석 결과 스트리밍/다운로드 제공  
@@ -16,7 +16,7 @@
 
 ## 👤 담당 역할 (원정환)
 
-### ✅ 1. YOLO + DeepSORT 기반 차량 추적 시스템 구현
+### ✅ 1. YOLO기반 차량 추적 시스템 구현
 
 - **YOLOv11x 모델로 프레임 단위 차량 탐지**
 - DeepSORT를 연동해 차량의 ID를 부여하고 프레임 간 **지속적인 객체 추적**
@@ -41,6 +41,6 @@
 | 구분        | 기술/라이브러리 |
 |-------------|----------------|
 | Language    | Python         |
-| Vision      | OpenCV, YOLOv8, DeepSORT, scikit-image |
+| Vision      | OpenCV, YOLOv8, scikit-image |
 | ML Model    | Scikit-learn, pickle 기반 분류기 |
 | Framework   | FastAPI        |
