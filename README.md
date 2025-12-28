@@ -25,7 +25,7 @@
 ### ✅ 2. 영상 분석 API 서버 구현 (FastAPI)
 
 - FastAPI를 기반으로 영상 업로드, 분석, 결과 반환까지 처리하는 API 설계
-- `/upload_video/`, `/stream_video/`, `/download_video/` 등 엔드포인트 구성
+- POST: `/video/upload/`, POST: `/video/select_parking_spot/`, GET: `/video/download/{filename}`, GET: `/video/preview/{video_id}` 엔드포인트 구성
 - HTML + JS 기반 UI를 통해 영상 업로드 후 자동 스트리밍 및 다운로드 제공
 
 ### ✅ 3. 주차 공간 분석 결과 시각화
